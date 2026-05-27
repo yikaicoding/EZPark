@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZPARK | Student Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="components.js" defer></script>
+</head>
+
+<body class="admin-body user-portal-body">
+
+    <ezpark-mobile-header></ezpark-mobile-header>
+
+    <ezpark-sidebar role="student" active="find"></ezpark-sidebar>
+
+    <main class="responsive-main">
+        <header class="hide-on-mobile">
+            <div>
+                <h1>Find Parking</h1>
+                <p class="section-subtitle">Pre-book your campus parking space</p>
+            </div>
+            <div class="user-profile">
+                <span>Student Driver</span>
+                <div class="avatar"></div>
+            </div>
+        </header>
+
+        <div class="user-workspace-grid">
+            
+            <div class="user-control-col">
+                <section class="card driver-status-card">
+                    <div class="status-header">
+                        <span class="card-title">Active Status</span>
+                        <span class="status-indicator-dot pulsing"></span>
+                    </div>
+                    <div class="active-reservation-block">
+                        <div class="status-detail">
+                            <p class="detail-label">Bay</p>
+                            <p class="detail-value text-teal mono-text">A-05</p>
+                        </div>
+                        <div class="status-detail">
+                            <p class="detail-label">Plate</p>
+                            <p class="detail-value mono-text">PPP-505</p>
+                        </div>
+                        <div class="status-detail">
+                            <p class="detail-label">Time</p>
+                            <p class="detail-value text-alert mono-text">0h 45m</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card zone-selector-card">
+                    <span class="card-title">Select Campus Zone</span>
+                    <div class="zone-dropdown-wrapper">
+                        <select id="zoneSelect" class="global-select">
+                            <option value="zone-a">Zone A (North Multi-Level Garage)</option>
+                            <option value="zone-b">Zone B (Science Faculty Surface Lot)</option>
+                            <option value="zone-c">Zone C (Underground Deck)</option>
+                        </select>
+                    </div>
+                </section>
+            </div>
+
+            <div class="user-map-col">
+                <section class="card user-map-card">
+                    
+                    <ezpark-calendar></ezpark-calendar>
+
+                    <div class="map-inner-header">
+                        <h3 class="panel-title" id="currentZoneTitle">Zone A</h3>
+                        
+                        <div class="floor-switcher" id="floorSwitcherContainer">
+                            <button class="floor-btn active" data-floor="L1">Level 1</button>
+                            <button class="floor-btn" data-floor="L2">Level 2</button>
+                            <button class="floor-btn" data-floor="L3">Level 3</button>
+                        </div>
+
+                        <div class="map-legend">
+                            <span class="legend-item"><span class="dot available"></span> Free</span>
+                            <span class="legend-item"><span class="dot occupied"></span> Full</span>
+                            <span class="legend-item"><span class="dot reserved"></span> Mine</span>
+                        </div>
+                    </div>
+
+                    <div class="map-scroll-viewport">
+                        <div class="floor-maps-container">
+                            
+                            <div id="map-L1" class="parking-garage-structure floor-panel active">
+                                <div class="parking-spot occupied">A-01</div>
+                                <div class="parking-spot available">A-02</div>
+                                <div class="parking-spot available">A-03</div>
+                                <div class="parking-spot available">A-04</div>
+                                <div class="parking-spot reserved">A-05</div>
+                                
+                                <div class="driving-lane-landmark">← Central Drive Lane (One Way) — Do Not Block →</div>
+                                
+                                <div class="parking-spot occupied">A-06</div>
+                                <div class="parking-spot occupied">A-07</div>
+                                <div class="parking-spot occupied">A-08</div>
+                                <div class="parking-spot available">A-09</div>
+                                <div class="parking-spot available">A-10</div>
+                            </div>
+
+                            <div id="map-L2" class="parking-garage-structure floor-panel">
+                                <div class="parking-spot available">B-01</div>
+                                <div class="parking-spot occupied">B-02</div>
+                                <div class="parking-spot occupied">B-03</div>
+                                <div class="parking-spot available">B-04</div>
+                                <div class="parking-spot available">B-05</div>
+                                
+                                <div class="driving-lane-landmark">← Central Drive Lane (One Way) — Do Not Block →</div>
+                                
+                                <div class="parking-spot available">B-06</div>
+                                <div class="parking-spot occupied">B-07</div>
+                                <div class="parking-spot available">B-08</div>
+                                <div class="parking-spot occupied">B-09</div>
+                                <div class="parking-spot available">B-10</div>
+                            </div>
+
+                            <div id="map-L3" class="parking-garage-structure floor-panel">
+                                <div class="parking-spot available">C-01</div>
+                                <div class="parking-spot available">C-02</div>
+                                <div class="parking-spot available">C-03</div>
+                                <div class="parking-spot occupied">C-04</div>
+                                <div class="parking-spot occupied">C-05</div>
+                                
+                                <div class="driving-lane-landmark">← Central Drive Lane (One Way) — Do Not Block →</div>
+                                
+                                <div class="parking-spot occupied">C-06</div>
+                                <div class="parking-spot occupied">C-07</div>
+                                <div class="parking-spot available">C-08</div>
+                                <div class="parking-spot available">C-09</div>
+                                <div class="parking-spot available">C-10</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <ezpark-booking-panel></ezpark-booking-panel>
+
+                </section>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // 1. Structural Level Tab Switcher Logic
+        const floorButtons = document.querySelectorAll('.floor-btn');
+        const floorPanels = document.querySelectorAll('.floor-panel');
+        
+        floorButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                floorButtons.forEach(btn => btn.classList.remove('active'));
+                floorPanels.forEach(panel => panel.classList.remove('active'));
+                
+                button.classList.add('active');
+                const targetFloor = button.getAttribute('data-floor');
+                document.getElementById(`map-${targetFloor}`).classList.add('active');
+            });
+        });
+
+        // 2. Zone Selection Dynamic Text Title Modifier
+        const zoneSelect = document.getElementById('zoneSelect');
+        const currentZoneTitle = document.getElementById('currentZoneTitle');
+        const floorSwitcherContainer = document.getElementById('floorSwitcherContainer');
+        
+        zoneSelect.addEventListener('change', (e) => {
+            const selectedZoneText = e.target.options[e.target.selectedIndex].text;
+            currentZoneTitle.textContent = `${selectedZoneText.split(' (')[0]}`;
+            
+            if (e.target.value === 'zone-b') {
+                floorSwitcherContainer.style.visibility = 'hidden';
+            } else {
+                floorSwitcherContainer.style.visibility = 'visible';
+            }
+        });
+
+        // 3. LIVE MAP SELECTION EVENT BINDINGS
+        setTimeout(() => {
+            const availableSpots = document.querySelectorAll('.parking-spot.available');
+            const bookingDrawer = document.getElementById('bookingDrawer');
+            const drawerBayLabel = document.getElementById('drawerBayLabel');
+            const submitBookingBtn = document.getElementById('submitBookingBtn');
+
+            availableSpots.forEach(spot => {
+                spot.addEventListener('click', () => {
+                    // Clear previous selection highlights
+                    document.querySelectorAll('.parking-spot').forEach(s => s.classList.remove('selected-target'));
+                    
+                    // Add prominent selection outline onto the clicked spot
+                    spot.classList.add('selected-target');
+                    
+                    // Push dynamic details into our web component nodes
+                    if (bookingDrawer && drawerBayLabel) {
+                        drawerBayLabel.textContent = spot.textContent;
+                        bookingDrawer.classList.add('active'); 
+                    }
+                });
+            });
+
+            // Handle successful confirmation transitions
+            if (submitBookingBtn) {
+                submitBookingBtn.addEventListener('click', () => {
+                    alert(`Success! Space ${drawerBayLabel.textContent} is locked in for your arrival.`);
+                    bookingDrawer.classList.remove('active');
+                    
+                    const currentSelected = document.querySelector('.parking-spot.selected-target');
+                    if (currentSelected) {
+                        currentSelected.classList.remove('selected-target', 'available');
+                        currentSelected.classList.add('reserved');
+                    }
+                });
+            }
+        }, 150);
+    </script>
+</body>
+</html>

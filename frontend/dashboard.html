@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZPARK | Admin Dashboard</title>
+    <!-- Master shared typography and portal layout guidelines -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Reusable Component Library Engine -->
+    <script src="components.js" defer></script>
+</head>
+<body class="admin-body">
+
+    <!-- REUSABLE MOBILE HEADER COMPONENT -->
+    <ezpark-mobile-header></ezpark-mobile-header>
+
+    <!-- REUSABLE SIDEBAR NAVIGATION COMPONENT (Active target pinned to admin "overview") -->
+    <ezpark-sidebar role="admin" active="overview"></ezpark-sidebar>
+
+    <!-- MAIN ADMINISTRATIVE WORKSPACE -->
+    <main class="responsive-main">
+        <header class="hide-on-mobile">
+            <div>
+                <h1>Overview Hub</h1>
+                <p class="section-subtitle">Real-time campus parking operations and logistics</p>
+            </div>
+            <div class="user-profile">
+                <span>System Administrator</span>
+                <div class="avatar" style="background-color: var(--brand-slate);"></div>
+            </div>
+        </header>
+
+        <!-- SUMMARY METRICS SNAPSHOT GRID -->
+        <div class="metrics-grid">
+            <section class="card">
+                <span class="control-label">Total Managed Bays</span>
+                <h2 class="mono-text" style="font-size: 28px; margin-top: 4px;">150</h2>
+            </section>
+            <section class="card" style="border-left: 4px solid var(--state-available);">
+                <span class="control-label">Current Available</span>
+                <h2 class="mono-text text-available" style="font-size: 28px; margin-top: 4px;">42</h2>
+            </section>
+            <section class="card" style="border-left: 4px solid var(--brand-teal-start);">
+                <span class="control-label">Active Pre-Books</span>
+                <h2 class="mono-text text-teal" style="font-size: 28px; margin-top: 4px;">88</h2>
+            </section>
+            <section class="card" style="border-left: 4px solid var(--state-alert);">
+                <span class="control-label">System Alerts</span>
+                <h2 class="mono-text text-alert" style="font-size: 28px; margin-top: 4px;">3</h2>
+            </section>
+        </div>
+
+        <!-- TWO-COLUMN ADMIN DATA SPLIT -->
+        <div class="workspace-grid">
+            
+            <!-- LEFT COLUMN: LIVE BAY OCCUPANCY MONITOR -->
+            <div class="table-container">
+                <h3 class="panel-title" style="margin-bottom: 16px;">Live Bay Status Monitor</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Bay ID</th>
+                            <th>Zone Location</th>
+                            <th>Current State</th>
+                            <th>Assigned Plate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="mono-text font-weight: 700;">A-01</td>
+                            <td>Zone A (Level 1)</td>
+                            <td><span class="status-badge occupied">Occupied</span></td>
+                            <td class="mono-text">WQA-2031</td>
+                        </tr>
+                        <tr>
+                            <td class="mono-text">A-02</td>
+                            <td>Zone A (Level 1)</td>
+                            <td><span class="status-badge available">Available</span></td>
+                            <td class="mono-text text-muted">—</td>
+                        </tr>
+                        <tr>
+                            <td class="mono-text">A-05</td>
+                            <td>Zone A (Level 1)</td>
+                            <td><span class="status-badge available" style="background: rgba(27, 181, 164, 0.1); color: var(--brand-teal-start);">Reserved</span></td>
+                            <td class="mono-text">PPP-505</td>
+                        </tr>
+                        <tr>
+                            <td class="mono-text">B-14</td>
+                            <td>Zone B (Surface Lot)</td>
+                            <td><span class="status-badge alert">Blocked (EV Only)</span></td>
+                            <td class="mono-text text-muted">—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- RIGHT COLUMN: RECENT INFRASTRUCTURE SECURITY LOGS -->
+            <div class="table-container">
+                <h3 class="panel-title" style="margin-bottom: 16px;">System Activity Logs</h3>
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                    <div style="border-left: 3px solid var(--brand-teal-start); padding-left: 12px;">
+                        <p style="font-size: 13px; font-weight: 600;">Pre-Booking Created</p>
+                        <p class="section-subtitle" style="font-size: 12px; margin-top: 2px;">User <span class="mono-text">student123</span> reserved Bay <span class="mono-text">A-05</span></p>
+                    </div>
+                    <div style="border-left: 3px solid var(--state-available); padding-left: 12px;">
+                        <p style="font-size: 13px; font-weight: 600;">Bay Vacated Early</p>
+                        <p class="section-subtitle" style="font-size: 12px; margin-top: 2px;">Bay <span class="mono-text">C-09</span> marked free via floor pressure sensor</p>
+                    </div>
+                    <div style="border-left: 3px solid var(--state-alert); padding-left: 12px;">
+                        <p style="font-size: 13px; font-weight: 600;">Overtime Parking Infraction</p>
+                        <p class="section-subtitle" style="font-size: 12px; margin-top: 2px;">Vehicle <span class="mono-text">VCS-9912</span> exceeded stay limit in Zone A</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>

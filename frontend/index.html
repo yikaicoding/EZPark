@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZPARK | Welcome</title>
+    <!-- Master shared typography and portal layout guidelines -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Reusable Component Library Engine -->
+    <script src="components.js" defer></script>
+</head>
+<body class="login-page">
+
+    <!-- MASTER LOGIN CARD CONTAINER -->
+    <div class="login-container">
+        
+        <!-- Center-aligned brand component wrapper -->
+        <div style="display: flex; justify-content: center; margin-bottom: 6px;">
+            <ezpark-logo></ezpark-logo>
+        </div>
+        <p class="section-subtitle" style="text-align: center; margin-bottom: 32px;">Campus Smart Parking Portal</p>
+
+        <!-- CREDENTIAL SUBMISSION FORM -->
+        <form class="login-form" id="loginForm">
+            <div class="input-group">
+                <label for="username">Username or Student ID</label>
+                <input type="text" id="username" placeholder="e.g., student123" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+
+            <!-- PROTOTYPE GATEWAY ROUTER: Makes live project presentations completely seamless -->
+            <div class="input-group">
+                <label for="portalRole">Select Portal Destination</label>
+                <select id="portalRole" class="global-select" style="padding: 12px; font-size: 14px; background-color: #F8FAFC;">
+                    <option value="student">Student Driver Portal</option>
+                    <option value="admin">Campus Administrator Hub</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-primary full-width-btn" style="margin-top: 12px; padding: 14px; font-size: 14px;">
+                Sign In to Portal
+            </button>
+        </form>
+        
+    </div>
+
+    <!-- ==========================================================================
+         FRONTEND CLIENT-SIDE PROTOTYPE ROUTER
+         ========================================================================== -->
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            // Prevent HTML form page reload behavior
+            e.preventDefault();
+            
+            const selectedRole = document.getElementById('portalRole').value;
+            
+            // Evaluates chosen path and routes client immediately
+            if (selectedRole === 'admin') {
+                window.location.href = 'dashboard.html';
+            } else {
+                window.location.href = 'user.html';
+            }
+        });
+    </script>
+</body>
+</html>
