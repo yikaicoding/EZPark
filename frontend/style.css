@@ -411,6 +411,40 @@ main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding
         z-index: 100;
     }
 
+    .menu-toggle-btn {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 24px;
+        height: 16px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        outline: none;
+    }
+
+    .menu-toggle-btn span {
+        width: 100%;
+        height: 2px;
+        background-color: var(--brand-slate);
+        border-radius: 2px;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    /* Morphing Micro-Interaction: Converts the 3 lines into a clean 'X' on open */
+    .menu-toggle-btn.active span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+    
+    .menu-toggle-btn.active span:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .menu-toggle-btn.active span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
     ezpark-sidebar { position: absolute; }
     .responsive-sidebar {
         position: fixed;
