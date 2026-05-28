@@ -30,6 +30,7 @@
         <div class="user-workspace-grid">
             
             <div class="user-control-col">
+                
                 <section class="card driver-status-card">
                     <div class="status-header">
                         <span class="card-title">Active Status</span>
@@ -51,14 +52,64 @@
                     </div>
                 </section>
 
-                <section class="card zone-selector-card">
-                    <span class="card-title">Select Campus Zone</span>
-                    <div class="zone-dropdown-wrapper">
-                        <select id="zoneSelect" class="global-select">
-                            <option value="zone-a">Zone A (North Multi-Level Garage)</option>
-                            <option value="zone-b">Zone B (Science Faculty Surface Lot)</option>
-                            <option value="zone-c">Zone C (Underground Deck)</option>
-                        </select>
+                <section class="card">
+                    <span class="card-title">1. Choose Time Window</span>
+                    <div class="time-config-grid">
+                        <div class="form-group">
+                            <label class="detail-label">Arrival Time</label>
+                            <input type="time" id="globalArrivalTime" class="global-select" value="08:00">
+                        </div>
+                        <div class="form-group">
+                            <label class="detail-label">Duration</label>
+                            <select id="globalDuration" class="global-select">
+                                <option value="1">1 Hour (Quick Class)</option>
+                                <option value="2" selected>2 Hours (Standard Lab)</option>
+                                <option value="4">4 Hours (Half-Day Study)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p class="section-subtitle" id="timeRangeIndicator" style="margin-top: 8px; font-weight: 500; color: var(--brand-teal-start);">
+                        Allocated Block: 08:00 AM - 10:00 AM
+                    </p>
+                </section>
+
+                <section class="card">
+                    <span class="card-title">2. Select Campus Zone</span>
+                    <div class="zone-cards-list" id="zoneCardsContainer">
+                        
+                        <div class="zone-selection-item active" data-zone="zone-a">
+                            <div class="zone-item-header">
+                                <strong class="zone-name">Zone A</strong>
+                                <span class="zone-location-sub">North Multi-Level Garage</span>
+                            </div>
+                            <div class="zone-item-status">
+                                <span class="capacity-counter text-available" id="count-zone-a">🟢 14 / 30 Free</span>
+                                <span class="demand-badge badge-low" id="badge-zone-a">Low Demand</span>
+                            </div>
+                        </div>
+
+                        <div class="zone-selection-item" data-zone="zone-b">
+                            <div class="zone-item-header">
+                                <strong class="zone-name">Zone B</strong>
+                                <span class="zone-location-sub">Science Faculty Surface Lot</span>
+                            </div>
+                            <div class="zone-item-status">
+                                <span class="capacity-counter text-alert" id="count-zone-b">🔴 2 / 45 Free</span>
+                                <span class="demand-badge badge-high" id="badge-zone-b">Full Capacity</span>
+                            </div>
+                        </div>
+
+                        <div class="zone-selection-item" data-zone="zone-c">
+                            <div class="zone-item-header">
+                                <strong class="zone-name">Zone C</strong>
+                                <span class="zone-location-sub">Underground Deck</span>
+                            </div>
+                            <div class="zone-item-status">
+                                <span class="capacity-counter text-teal" id="count-zone-c">🟡 15 / 25 Free</span>
+                                <span class="demand-badge badge-moderate" id="badge-zone-c">Moderate</span>
+                            </div>
+                        </div>
+
                     </div>
                 </section>
             </div>
@@ -66,7 +117,7 @@
             <div class="user-map-col">
                 <section class="card user-map-card">
                     
-                    <ezpark-calendar></ezpark-calendar>
+                    <ezpark-calendar id="mainCalendarHub"></ezpark-calendar>
 
                     <div class="map-inner-header">
                         <h3 class="panel-title" id="currentZoneTitle">Zone A</h3>
@@ -86,11 +137,9 @@
 
                     <div class="map-scroll-viewport">
                         <div class="floor-maps-container">
-                            
                             <div id="map-L1" class="parking-garage-structure floor-panel active"></div>
                             <div id="map-L2" class="parking-garage-structure floor-panel"></div>
                             <div id="map-L3" class="parking-garage-structure floor-panel"></div>
-
                         </div>
                     </div>
 
@@ -103,24 +152,35 @@
     </main>
 
     <script>
-        // --- 1. THE DATA CONTRACT RESOURCE ---
-        // Generates a localized shadow copy of the array hosted safely inside data.js
+        // --- 1. SYSTEM CENTRAL STATE REGISTER ---
         let globalParkingDatabase = [...initialParkingData];
+        let selectedActiveZoneID = "zone-a";
+        let selectedActiveFloorID = "L1";
         let selectedActiveSpotID = null;
+        
+        let selectedBookingDate = "TODAY";
+        let selectedArrivalTime = "08:00";
+        let selectedDurationHours = 2;
 
-        // --- 2. THE DYNAMIC ENGINE RENDERER ---
-        function renderGarageMap(targetLevel) {
-            const container = document.getElementById(`map-${targetLevel}`);
+        // --- 2. THE LIVE MAP CELL GRAPHICS GENERATOR ---
+        function renderGarageMap() {
+            const container = document.getElementById(`map-${selectedActiveFloorID}`);
             if (!container) return;
 
-            // Clear old HTML nodes completely to prevent layout pile-ups
             container.innerHTML = "";
 
-            // Query our database array for elements matched to the selected floor
-            const levelSpots = globalParkingDatabase.filter(spot => spot.level === targetLevel);
+            // Query database array filtered precisely by active Zone AND active Floor level
+            const levelSpots = globalParkingDatabase.filter(spot => 
+                spot.zone === selectedActiveZoneID && spot.level === selectedActiveFloorID
+            );
+
+            // Mock edge case: If zone has no slots allocated (like Zone B surface lot)
+            if (levelSpots.length === 0) {
+                container.innerHTML = `<div class="driving-lane-landmark" style="grid-column: span 5; border-style: solid;">No multi-level tracking available for this zone configuration.</div>`;
+                return;
+            }
 
             levelSpots.forEach((spot, index) => {
-                // Symmetrically insert our layout separator dividing lines
                 if (index === 5) {
                     const lane = document.createElement("div");
                     lane.className = "driving-lane-landmark";
@@ -128,106 +188,185 @@
                     container.appendChild(lane);
                 }
 
-                // Construct a clean, isolated physical cell block DOM element
                 const spotDiv = document.createElement("div");
                 spotDiv.className = `parking-spot ${spot.status}`;
                 spotDiv.textContent = spot.id;
 
-                // Re-apply the target outline if this specific item matches our active cursor tracking
                 if (spot.id === selectedActiveSpotID) {
                     spotDiv.classList.add("selected-target");
                 }
 
-                // Only attach pointer selection gestures if the space is unallocated
                 if (spot.status === "available") {
-                    spotDiv.addEventListener("click", () => {
-                        handleSpotSelection(spot.id);
-                    });
+                    spotDiv.addEventListener("click", () => handleSpotSelection(spot.id));
                 }
 
                 container.appendChild(spotDiv);
             });
         }
 
-        // --- 3. RUNTIME UI STATE MANIPULATIONS ---
+        // --- 3. REACTIVE CONTROLLER OPERATIONS ---
         function handleSpotSelection(spotId) {
             selectedActiveSpotID = spotId;
-            
-            // Re-render the visual map array to cleanly apply selection halos instantly
-            const currentActiveFloor = document.querySelector('.floor-btn.active').getAttribute('data-floor');
-            renderGarageMap(currentActiveFloor);
+            renderGarageMap(); // Sync graphic configurations instantly
 
-            // Fetch references to elements inside our custom web component shadows
             const bookingDrawer = document.getElementById('bookingDrawer');
             const drawerBayLabel = document.getElementById('drawerBayLabel');
+            const arrivalTimeInput = document.getElementById('arrivalTimeInput');
 
             if (bookingDrawer && drawerBayLabel) {
                 drawerBayLabel.textContent = spotId;
+                
+                // Push our top-level global time configurations straight down into our custom drawer components dynamically
+                if (arrivalTimeInput) {
+                    arrivalTimeInput.value = selectedArrivalTime;
+                }
                 bookingDrawer.classList.add('active'); 
             }
         }
 
-        // --- 4. NAVIGATION TAB ELEMENT EVENT REGISTRATIONS ---
+        // Central Simulator: Generates randomized mock capacity numbers based on chosen hour thresholds
+        function simulateCapacityEngine() {
+            const timeNum = parseInt(selectedArrivalTime.split(':')[0]);
+            
+            // Generate simulated metrics based on hours chosen (mimics heavy database calls)
+            let factorA = (timeNum >= 9 && timeNum <= 12) ? 4 : 14;
+            let factorB = (timeNum >= 8 && timeNum <= 11) ? 0 : 7;
+            let factorC = (timeNum >= 13 && timeNum <= 16) ? 2 : 18;
+
+            // Apply updates straight to the UI node labels
+            updateZoneCardUI("zone-a", factorA, 30, "count-zone-a", "badge-zone-a");
+            updateZoneCardUI("zone-b", factorB, 45, "count-zone-b", "badge-zone-b");
+            updateZoneCardUI("zone-c", factorC, 25, "count-zone-c", "badge-zone-c");
+        }
+
+        function updateZoneCardUI(zoneId, free, total, countElementId, badgeElementId) {
+            const countEl = document.getElementById(countElementId);
+            const badgeEl = document.getElementById(badgeElementId);
+            if (!countEl || !badgeEl) return;
+
+            let percentageFull = ((total - free) / total) * 100;
+            
+            if (free === 0) {
+                countEl.className = "capacity-counter text-alert";
+                countEl.textContent = `30/30`;
+                badgeEl.className = "demand-badge badge-high";
+                badgeEl.textContent = "Locked Full";
+            } else if (percentageFull > 80) {
+                countEl.className = "capacity-counter text-alert";
+                countEl.textContent = `${free} / ${total}`;
+                badgeEl.className = "demand-badge badge-high";
+                badgeEl.textContent = "High Demand";
+            } else if (percentageFull > 40) {
+                countEl.className = "capacity-counter text-teal";
+                countEl.textContent = `${free} / ${total}`;
+                badgeEl.className = "demand-badge badge-moderate";
+                badgeEl.textContent = "Moderate";
+            } else {
+                countEl.className = "capacity-counter text-available";
+                countEl.textContent = `${free} / ${total}`;
+                badgeEl.className = "demand-badge badge-low";
+                badgeEl.textContent = "Low Demand";
+            }
+        }
+
+        function calculateTimeBoundaries() {
+            const [hours, minutes] = selectedArrivalTime.split(':').map(Number);
+            let endHour = (hours + parseInt(selectedDurationHours)) % 24;
+            
+            const formatPad = (num) => String(num).padStart(2, '0');
+            const displayStart = `${formatPad(hours)}:${formatPad(minutes)}`;
+            const displayEnd = `${formatPad(endHour)}:${formatPad(minutes)}`;
+            
+            document.getElementById('timeRangeIndicator').textContent = `Allocated Block: ${displayStart} — ${displayEnd}`;
+            simulateCapacityEngine();
+        }
+
+        // --- 4. DATA-BOUND DOM NAVIGATION LISTENERS ---
+        
+        // Zone Selection Item Click Toggles
+        const zoneItems = document.querySelectorAll('.zone-selection-item');
+        zoneItems.forEach(item => {
+            item.addEventListener('click', () => {
+                zoneItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                selectedActiveZoneID = item.getAttribute('data-zone');
+                
+                // Track textual modifications onto the map canvas head
+                const nameStr = item.querySelector('.zone-name').textContent;
+                document.getElementById('currentZoneTitle').textContent = nameStr;
+
+                // Toggle Level options visibility contextually
+                const switcher = document.getElementById('floorSwitcherContainer');
+                switcher.style.visibility = selectedActiveZoneID === 'zone-b' ? 'hidden' : 'visible';
+
+                selectedActiveSpotID = null; // Clear tracking anchors
+                renderGarageMap();
+            });
+        });
+
+        // Floor Tab Switch Toggles
         const floorButtons = document.querySelectorAll('.floor-btn');
         const floorPanels = document.querySelectorAll('.floor-panel');
-        
         floorButtons.forEach(button => {
             button.addEventListener('click', () => {
                 floorButtons.forEach(btn => btn.classList.remove('active'));
                 floorPanels.forEach(panel => panel.classList.remove('active'));
                 
                 button.classList.add('active');
-                const targetFloor = button.getAttribute('data-floor');
-                document.getElementById(`map-${targetFloor}`).classList.add('active');
+                selectedActiveFloorID = button.getAttribute('data-floor');
+                document.getElementById(`map-${selectedActiveFloorID}`).classList.add('active');
                 
-                // Refresh data states seamlessly whenever a floor tab changes
-                renderGarageMap(targetFloor);
+                selectedActiveSpotID = null;
+                renderGarageMap();
             });
         });
 
-        // Zone Dropdown Event Hook
-        const zoneSelect = document.getElementById('zoneSelect');
-        const currentZoneTitle = document.getElementById('currentZoneTitle');
-        const floorSwitcherContainer = document.getElementById('floorSwitcherContainer');
-        
-        zoneSelect.addEventListener('change', (e) => {
-            const selectedZoneText = e.target.options[e.target.selectedIndex].text;
-            currentZoneTitle.textContent = `${selectedZoneText.split(' (')[0]}`;
-            floorSwitcherContainer.style.visibility = e.target.value === 'zone-b' ? 'hidden' : 'visible';
+        // Global Time Configuration Input Listeners
+        document.getElementById('globalArrivalTime').addEventListener('input', (e) => {
+            selectedArrivalTime = e.target.value;
+            calculateTimeBoundaries();
         });
 
-        // --- 5. RUNTIME INITIALIZATION ENGINE BOOTSTRAP ---
-        window.addEventListener("DOMContentLoaded", () => {
-            // Render initial garage layouts on start loading
-            renderGarageMap("L1");
-            renderGarageMap("L2");
-            renderGarageMap("L3");
+        document.getElementById('globalDuration').addEventListener('change', (e) => {
+            selectedDurationHours = e.target.value;
+            calculateTimeBoundaries();
+        });
 
-            // Safe lookup threshold buffer ensuring web components are registered completely
+        // --- 5. INITIAL SYSTEM BOOTSTRAP ---
+        window.addEventListener("DOMContentLoaded", () => {
+            calculateTimeBoundaries();
+            renderGarageMap();
+
+            // Establish final custom confirmations trigger bindings
             setTimeout(() => {
                 const submitBookingBtn = document.getElementById('submitBookingBtn');
                 const bookingDrawer = document.getElementById('bookingDrawer');
                 
                 if (submitBookingBtn) {
                     submitBookingBtn.addEventListener('click', () => {
-                        alert(`Success! Space ${selectedActiveSpotID} is locked in for your arrival.`);
+                        alert(`Success! Space ${selectedActiveSpotID} is locked in for your departure window.`);
                         
-                        // MUTATION LAYER: Locate item inside array database and switch state flag
                         const databaseEntry = globalParkingDatabase.find(s => s.id === selectedActiveSpotID);
                         if (databaseEntry) {
                             databaseEntry.status = "reserved"; 
                         }
 
-                        // Close out the panel frame and clear tracker references
                         bookingDrawer.classList.remove('active');
                         selectedActiveSpotID = null; 
-
-                        // Trigger visual layout re-render with updated values
-                        const currentActiveFloor = document.querySelector('.floor-btn.active').getAttribute('data-floor');
-                        renderGarageMap(currentActiveFloor);
+                        renderGarageMap();
                     });
                 }
-            }, 200);
+
+                // Listen to rolling horizontal layout calendars clicks seamlessly
+                const dateCards = document.querySelectorAll('.date-card');
+                dateCards.forEach(card => {
+                    card.addEventListener('click', () => {
+                        selectedBookingDate = card.querySelector('.date-num').textContent;
+                        simulateCapacityEngine(); // Redo calculations for new days chosen
+                    });
+                });
+            }, 300);
         });
     </script>
 </body>
