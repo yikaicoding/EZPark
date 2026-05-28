@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZPARK | My Reservations</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="components.js" defer></script>
+    <style>
+        /* Contextual layouts unique to ticket and history management */
+        .tickets-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .ticket-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #F8FAFC;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .ticket-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .ticket-info-group {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+        .ticket-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .btn-outline-danger {
+            background: none;
+            border: 1px solid var(--state-alert);
+            color: var(--state-alert);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+        .btn-outline-danger:hover {
+            background-color: #FFF1F2;
+        }
+        .badge-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .badge-active { background-color: #B8EBD0; color: var(--state-available); }
+        
+        /* Unified History Table Styles */
+        .history-table-wrapper {
+            overflow-x: auto;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-top: 12px;
+        }
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+        .history-table th {
+            background-color: #F8FAFC;
+            padding: 16px;
+            font-family: 'Satoshi', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .history-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--brand-slate);
+        }
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+        .badge-completed {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            background-color: #E2E8F0;
+            color: var(--brand-slate);
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body class="admin-body user-portal-body">
+
+    <ezpark-mobile-header></ezpark-mobile-header>
+
+    <ezpark-sidebar role="student" active="reservations"></ezpark-sidebar>
+
+    <main class="responsive-main">
+        <header class="hide-on-mobile">
+            <div>
+                <h1>My Reservations</h1>
+                <p class="section-subtitle">Track your active sessions, upcoming bookings, and past logs</p>
+            </div>
+            <div class="user-profile">
+                <span>Student Driver</span>
+                <div class="avatar"></div>
+            </div>
+        </header>
+
+        <div class="user-workspace-grid" style="grid-template-columns: 1fr;">
+            <div class="user-control-col" style="gap: 32px;">
+                
+                <section class="card driver-status-card" style="border-left-width: 6px;">
+                    <div class="status-header">
+                        <div>
+                            <span class="badge-status badge-active" style="margin-bottom: 6px;">Live Now</span>
+                            <h3 class="panel-title" style="font-size: 22px !important;">Active Booking</h3>
+                        </div>
+                        <span class="status-indicator-dot pulsing"></span>
+                    </div>
+
+                    <div class="active-reservation-block" style="margin: 12px 0 20px 0; padding: 24px;">
+                        <div class="status-detail">
+                            <p class="detail-label">Zone / Floor</p>
+                            <p class="detail-value mono-text" style="font-size: 20px !important;">Zone A / L1</p>
+                        </div>
+                        <div class="status-detail">
+                            <p class="detail-label">Assigned Bay</p>
+                            <p class="detail-value text-teal mono-text" style="font-size: 20px !important;">A-05</p>
+                        </div>
+                        <div class="status-detail">
+                            <p class="detail-label">Registered Vehicle</p>
+                            <p class="detail-value mono-text" style="font-size: 20px !important;">PPP-505</p>
+                        </div>
+                        <div class="status-detail">
+                            <p class="detail-label">Time Remaining</p>
+                            <p class="detail-value text-alert mono-text" style="font-size: 20px !important;">0h 45m</p>
+                        </div>
+                    </div>
+
+                    <div class="ticket-actions" style="justify-content: flex-end;">
+                        <button class="btn-outline-danger" id="leaveEarlyBtn">Release Space Early</button>
+                        <button class="btn-primary">Extend Duration</button>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h3 class="panel-title" style="font-size: 18px !important; margin-bottom: 12px;">Upcoming Bookings</h3>
+                    
+                    <div class="tickets-container">
+                        <div class="ticket-item">
+                            <div class="ticket-info-group">
+                                <div class="ticket-meta">
+                                    <p class="detail-label">Date & Time</p>
+                                    <strong class="mono-text" style="font-size: 15px;">Tomorrow, 29 May | 10:00 AM</strong>
+                                </div>
+                                <div class="ticket-meta">
+                                    <p class="detail-label">Location</p>
+                                    <span style="font-weight: 700; color: var(--brand-slate);">Zone A (Level 2)</span>
+                                </div>
+                                <div class="ticket-meta">
+                                    <p class="detail-label">Bay</p>
+                                    <strong class="mono-text text-teal">B-04</strong>
+                                </div>
+                                <div class="ticket-meta">
+                                    <p class="detail-label">Duration</p>
+                                    <span>2 Hours (Standard Lab)</span>
+                                </div>
+                            </div>
+                            <div class="ticket-actions">
+                                <button class="btn-outline-danger" onclick="cancelTicket('B-04')">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h3 class="panel-title" style="font-size: 18px !important; margin-bottom: 4px;">Past Parking History</h3>
+                    <p class="section-subtitle" style="margin-bottom: 12px;">Archived records of your completed campus parking logs</p>
+                    
+                    <div class="history-table-wrapper">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Location / Floor</th>
+                                    <th>Bay</th>
+                                    <th>Plate</th>
+                                    <th>Duration</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: 700;">25 May 2026</td>
+                                    <td>Zone A (Level 1)</td>
+                                    <td class="mono-text text-teal" style="font-weight: 700;">A-03</td>
+                                    <td class="mono-text">PPP-505</td>
+                                    <td>2 Hours</td>
+                                    <td><span class="badge-completed">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 700;">22 May 2026</td>
+                                    <td>Zone B (Surface Lot)</td>
+                                    <td class="mono-text text-teal" style="font-weight: 700;">B-12</td>
+                                    <td class="mono-text">PPP-505</td>
+                                    <td>1 Hour</td>
+                                    <td><span class="badge-completed">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('leaveEarlyBtn')?.addEventListener('click', () => {
+            if(confirm("Are you sure you want to release your parking space early? This session cannot be undone.")) {
+                alert("Space released successfully. Safe travels!");
+            }
+        });
+
+        function cancelTicket(bayId) {
+            if(confirm(`Cancel your upcoming reservation for space ${bayId}?`)) {
+                alert(`Reservation for ${bayId} has been successfully deleted.`);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -43,12 +43,13 @@ class EzParkSidebar extends HTMLElement {
                 </li>
             `;
         } else {
+            // Change lines 43-54 inside components.js to point to actual filenames:
             menuLinksHTML = `
                 <li class="nav-item ${activeLink === 'find' ? 'active' : ''}">
                     <a href="user.html">Find Parking</a>
                 </li>
                 <li class="nav-item ${activeLink === 'reservations' ? 'active' : ''}">
-                    <a href="#">My Reservations</a>
+                    <a href="reservations.html">My Reservations</a>
                 </li>
                 <li class="nav-item ${activeLink === 'history' ? 'active' : ''}">
                     <a href="#">Parking History</a>
