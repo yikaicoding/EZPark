@@ -4,17 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EZPARK | Student Portal</title>
+    <!-- Master shared typography and high-contrast tokens -->
     <link rel="stylesheet" href="style.css">
+    <!-- Static dataset injection -->
     <script src="data.js"></script>
+    <!-- Reusable Web Component Framework -->
     <script src="components.js" defer></script>
 </head>
 
 <body class="admin-body user-portal-body">
 
+    <!-- REUSABLE MOBILE HEADER COMPONENT -->
     <ezpark-mobile-header></ezpark-mobile-header>
 
+    <!-- REUSABLE SIDEBAR COMPONENT -->
     <ezpark-sidebar role="student" active="find"></ezpark-sidebar>
 
+    <!-- MAIN APP PANEL WORKSPACE -->
     <main class="responsive-main">
         <header class="hide-on-mobile">
             <div>
@@ -27,13 +33,16 @@
             </div>
         </header>
 
+        <!-- DASHBOARD GRID FRAMEWORK -->
         <div class="user-workspace-grid">
             
+            <!-- LEFT COLUMN: VERTICAL DATA CONTROL NODE -->
             <div class="user-control-col">
                 
+                <!-- DRIVER ACTIVE STATUS (LIVE PARKING TICKET) -->
                 <section class="card driver-status-card">
                     <div class="status-header">
-                        <span class="card-title">Active Status</span>
+                        <h3 class="panel-title" style="font-size: 16px !important;">Active Status</h3>
                         <span class="status-indicator-dot pulsing"></span>
                     </div>
                     <div class="active-reservation-block">
@@ -52,9 +61,11 @@
                     </div>
                 </section>
 
+                <!-- GLOBAL DATE & TIME CONFIGURATOR -->
                 <section class="card">
-                    <span class="card-title">1. Choose Date & Time</span>
+                    <h3 class="panel-title" style="margin-bottom: 12px;">Choose Date & Time</h3>
                     
+                    <!-- Unified Calendar Placement -->
                     <ezpark-calendar id="mainCalendarHub"></ezpark-calendar>
 
                     <div class="time-config-grid">
@@ -71,58 +82,64 @@
                             </select>
                         </div>
                     </div>
-                    <p class="section-subtitle" id="timeRangeIndicator" style="margin-top: 8px; font-weight: 500; color: var(--brand-teal-start);">
-                        Allocated Block: 08:00 AM - 10:00 AM
+                    <p class="section-subtitle" id="timeRangeIndicator" style="margin-top: 12px; font-weight: 700; color: var(--brand-teal-start);">
+                        Allocated Block: 08:00 AM — 10:00 AM
                     </p>
-                </section>
-
-                <section class="card">
-                    <span class="card-title">2. Select Campus Zone</span>
-                    <div class="zone-cards-list" id="zoneCardsContainer">
-                        
-                        <div class="zone-selection-item active" data-zone="zone-a">
-                            <div class="zone-item-header">
-                                <strong class="zone-name">Zone A</strong>
-                                <span class="zone-location-sub">North Multi-Level Garage</span>
-                            </div>
-                            <div class="zone-item-status">
-                                <span class="capacity-counter text-available" id="count-zone-a">🟢 14 / 30 Free</span>
-                                <span class="demand-badge badge-low" id="badge-zone-a">Low Demand</span>
-                            </div>
-                        </div>
-
-                        <div class="zone-selection-item" data-zone="zone-b">
-                            <div class="zone-item-header">
-                                <strong class="zone-name">Zone B</strong>
-                                <span class="zone-location-sub">Science Faculty Surface Lot</span>
-                            </div>
-                            <div class="zone-item-status">
-                                <span class="capacity-counter text-alert" id="count-zone-b">🔴 2 / 45 Free</span>
-                                <span class="demand-badge badge-high" id="badge-zone-b">Full Capacity</span>
-                            </div>
-                        </div>
-
-                        <div class="zone-selection-item" data-zone="zone-c">
-                            <div class="zone-item-header">
-                                <strong class="zone-name">Zone C</strong>
-                                <span class="zone-location-sub">Underground Deck</span>
-                            </div>
-                            <div class="zone-item-status">
-                                <span class="capacity-counter text-teal" id="count-zone-c">🟡 15 / 25 Free</span>
-                                <span class="demand-badge badge-moderate" id="badge-zone-c">Moderate</span>
-                            </div>
-                        </div>
-
-                    </div>
                 </section>
             </div>
 
-            <div class="user-map-col">
-                <section class="card user-map-card">
+            <!-- RIGHT COLUMN: MASTER VISUAL WORKSPACE (CAMPUS SELECTION & MAP) -->
+            <div class="user-map-col" style="display: flex; flex-direction: column; gap: 24px;">
+                
+                <!-- HORIZONTAL PREMIUM CAMPUS ZONE SELECTION BAR -->
+                <section class="card" style="padding: 20px 24px;">
+                    <h3 class="panel-title" style="margin-bottom: 12px;">Select Campus Zone</h3>
+                    
+                    <div class="zone-cards-list" id="zoneCardsContainer">
+                        <!-- ZONE TILE A -->
+                        <div class="zone-selection-item active" data-zone="zone-a">
+                            <div class="zone-item-header">
+                                <strong class="zone-name">Zone A</strong>
+                                <span class="zone-location-sub">North Garage</span>
+                            </div>
+                            <div class="zone-item-status">
+                                <span class="capacity-counter text-available" id="count-zone-a">14 / 30 Free</span>
+                                <span class="demand-badge badge-low" id="badge-zone-a">Low</span>
+                            </div>
+                        </div>
 
+                        <!-- ZONE TILE B -->
+                        <div class="zone-selection-item" data-zone="zone-b">
+                            <div class="zone-item-header">
+                                <strong class="zone-name">Zone B</strong>
+                                <span class="zone-location-sub">Science Lot</span>
+                            </div>
+                            <div class="zone-item-status">
+                                <span class="capacity-counter text-alert" id="count-zone-b">2 / 45 Free</span>
+                                <span class="demand-badge badge-high" id="badge-zone-b">Full</span>
+                            </div>
+                        </div>
+
+                        <!-- ZONE TILE C -->
+                        <div class="zone-selection-item" data-zone="zone-c">
+                            <div class="zone-item-header">
+                                <strong class="zone-name">Zone C</strong>
+                                <span class="zone-location-sub">Underground</span>
+                            </div>
+                            <div class="zone-item-status">
+                                <span class="capacity-counter text-teal" id="count-zone-c">15 / 25 Free</span>
+                                <span class="demand-badge badge-moderate" id="badge-zone-c">Moderate</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PARKING GARAGE REAL-TIME CELL GRID CANVAS -->
+                <section class="card user-map-card">
                     <div class="map-inner-header">
-                        <h3 class="panel-title" id="currentZoneTitle">Zone A</h3>
+                        <h2 class="panel-title" id="currentZoneTitle" style="font-size: 28px !important;">Zone A</h2>
                         
+                        <!-- Level Navigation Pills -->
                         <div class="floor-switcher" id="floorSwitcherContainer">
                             <button class="floor-btn active" data-floor="L1">Level 1</button>
                             <button class="floor-btn" data-floor="L2">Level 2</button>
@@ -136,6 +153,7 @@
                         </div>
                     </div>
 
+                    <!-- Scroll Engine viewport windows -->
                     <div class="map-scroll-viewport">
                         <div class="floor-maps-container">
                             <div id="map-L1" class="parking-garage-structure floor-panel active"></div>
@@ -144,16 +162,19 @@
                         </div>
                     </div>
 
+                    <!-- REUSABLE BOOKING DRAWER SLIDE PANEL -->
                     <ezpark-booking-panel></ezpark-booking-panel>
-
                 </section>
             </div>
 
         </div>
     </main>
 
+    <!-- ==========================================================================
+         PORTAL REACTIVE CENTRAL SCHEDULING ENGINE
+         ========================================================================== -->
     <script>
-        // --- 1. SYSTEM CENTRAL STATE REGISTER ---
+        // --- 1. RUNTIME STATE MEMORY CACHE ---
         let globalParkingDatabase = [...initialParkingData];
         let selectedActiveZoneID = "zone-a";
         let selectedActiveFloorID = "L1";
@@ -163,25 +184,26 @@
         let selectedArrivalTime = "08:00";
         let selectedDurationHours = 2;
 
-        // --- 2. THE LIVE MAP CELL GRAPHICS GENERATOR ---
+        // --- 2. THE MAP DESIGN CELL COMPILER ---
         function renderGarageMap() {
             const container = document.getElementById(`map-${selectedActiveFloorID}`);
             if (!container) return;
 
             container.innerHTML = "";
 
-            // Query database array filtered precisely by active Zone AND active Floor level
+            // Query level allocations filtering by the active state settings
             const levelSpots = globalParkingDatabase.filter(spot => 
                 spot.zone === selectedActiveZoneID && spot.level === selectedActiveFloorID
             );
 
-            // Mock edge case: If zone has no slots allocated (like Zone B surface lot)
+            // Edge Exception Handle: Surface lots don't have separate floors
             if (levelSpots.length === 0) {
-                container.innerHTML = `<div class="driving-lane-landmark" style="grid-column: span 5; border-style: solid;">No multi-level tracking available for this zone configuration.</div>`;
+                container.innerHTML = `<div class="driving-lane-landmark" style="grid-column: span 5; border-style: solid;">No multi-level structural grids mapped for this zone selection.</div>`;
                 return;
             }
 
             levelSpots.forEach((spot, index) => {
+                // Insert contextual driving landmark row exactly down the middle axis split
                 if (index === 5) {
                     const lane = document.createElement("div");
                     lane.className = "driving-lane-landmark";
@@ -205,10 +227,10 @@
             });
         }
 
-        // --- 3. REACTIVE CONTROLLER OPERATIONS ---
+        // --- 3. SELECTION PROCESSING HUB ---
         function handleSpotSelection(spotId) {
             selectedActiveSpotID = spotId;
-            renderGarageMap(); // Sync graphic configurations instantly
+            renderGarageMap();
 
             const bookingDrawer = document.getElementById('bookingDrawer');
             const drawerBayLabel = document.getElementById('drawerBayLabel');
@@ -216,8 +238,6 @@
 
             if (bookingDrawer && drawerBayLabel) {
                 drawerBayLabel.textContent = spotId;
-                
-                // Push our top-level global time configurations straight down into our custom drawer components dynamically
                 if (arrivalTimeInput) {
                     arrivalTimeInput.value = selectedArrivalTime;
                 }
@@ -225,16 +245,15 @@
             }
         }
 
-        // Central Simulator: Generates randomized mock capacity numbers based on chosen hour thresholds
+        // --- 4. REAL-TIME DATA SIMULATOR CORES ---
         function simulateCapacityEngine() {
             const timeNum = parseInt(selectedArrivalTime.split(':')[0]);
             
-            // Generate simulated metrics based on hours chosen (mimics heavy database calls)
+            // Generate variable mock capacities mapped closely against standard class schedules
             let factorA = (timeNum >= 9 && timeNum <= 12) ? 4 : 14;
             let factorB = (timeNum >= 8 && timeNum <= 11) ? 0 : 7;
             let factorC = (timeNum >= 13 && timeNum <= 16) ? 2 : 18;
 
-            // Apply updates straight to the UI node labels
             updateZoneCardUI("zone-a", factorA, 30, "count-zone-a", "badge-zone-a");
             updateZoneCardUI("zone-b", factorB, 45, "count-zone-b", "badge-zone-b");
             updateZoneCardUI("zone-c", factorC, 25, "count-zone-c", "badge-zone-c");
@@ -249,24 +268,24 @@
             
             if (free === 0) {
                 countEl.className = "capacity-counter text-alert";
-                countEl.textContent = `30/30`;
+                countEl.textContent = `Full Capacity`;
                 badgeEl.className = "demand-badge badge-high";
-                badgeEl.textContent = "Locked Full";
+                badgeEl.textContent = "Locked";
             } else if (percentageFull > 80) {
                 countEl.className = "capacity-counter text-alert";
-                countEl.textContent = `${free} / ${total}`;
+                countEl.textContent = `${free} / ${total} Free`;
                 badgeEl.className = "demand-badge badge-high";
-                badgeEl.textContent = "High Demand";
+                badgeEl.textContent = "Full";
             } else if (percentageFull > 40) {
                 countEl.className = "capacity-counter text-teal";
-                countEl.textContent = `${free} / ${total}`;
+                countEl.textContent = `${free} / ${total} Free`;
                 badgeEl.className = "demand-badge badge-moderate";
                 badgeEl.textContent = "Moderate";
             } else {
                 countEl.className = "capacity-counter text-available";
-                countEl.textContent = `${free} / ${total}`;
+                countEl.textContent = `${free} / ${total} Free`;
                 badgeEl.className = "demand-badge badge-low";
-                badgeEl.textContent = "Low Demand";
+                badgeEl.textContent = "Low";
             }
         }
 
@@ -282,64 +301,61 @@
             simulateCapacityEngine();
         }
 
-        // --- 4. DATA-BOUND DOM NAVIGATION LISTENERS ---
-        
-        // Zone Selection Item Click Toggles
-        const zoneItems = document.querySelectorAll('.zone-selection-item');
-        zoneItems.forEach(item => {
-            item.addEventListener('click', () => {
-                zoneItems.forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-
-                selectedActiveZoneID = item.getAttribute('data-zone');
-                
-                // Track textual modifications onto the map canvas head
-                const nameStr = item.querySelector('.zone-name').textContent;
-                document.getElementById('currentZoneTitle').textContent = nameStr;
-
-                // Toggle Level options visibility contextually
-                const switcher = document.getElementById('floorSwitcherContainer');
-                switcher.style.visibility = selectedActiveZoneID === 'zone-b' ? 'hidden' : 'visible';
-
-                selectedActiveSpotID = null; // Clear tracking anchors
-                renderGarageMap();
-            });
-        });
-
-        // Floor Tab Switch Toggles
-        const floorButtons = document.querySelectorAll('.floor-btn');
-        const floorPanels = document.querySelectorAll('.floor-panel');
-        floorButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                floorButtons.forEach(btn => btn.classList.remove('active'));
-                floorPanels.forEach(panel => panel.classList.remove('active'));
-                
-                button.classList.add('active');
-                selectedActiveFloorID = button.getAttribute('data-floor');
-                document.getElementById(`map-${selectedActiveFloorID}`).classList.add('active');
-                
-                selectedActiveSpotID = null;
-                renderGarageMap();
-            });
-        });
-
-        // Global Time Configuration Input Listeners
-        document.getElementById('globalArrivalTime').addEventListener('input', (e) => {
-            selectedArrivalTime = e.target.value;
-            calculateTimeBoundaries();
-        });
-
-        document.getElementById('globalDuration').addEventListener('change', (e) => {
-            selectedDurationHours = e.target.value;
-            calculateTimeBoundaries();
-        });
-
-        // --- 5. INITIAL SYSTEM BOOTSTRAP ---
+        // --- 5. REGISTER EVENT INTERACTION CAPTURES ---
         window.addEventListener("DOMContentLoaded", () => {
             calculateTimeBoundaries();
             renderGarageMap();
 
-            // Establish final custom confirmations trigger bindings
+            // Row-Tile Campus Option Clicks
+            const zoneItems = document.querySelectorAll('.zone-selection-item');
+            zoneItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    zoneItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+
+                    selectedActiveZoneID = item.getAttribute('data-zone');
+                    
+                    const nameStr = item.querySelector('.zone-name').textContent;
+                    document.getElementById('currentZoneTitle').textContent = nameStr;
+
+                    // Manage visible floor switch parameters contextually
+                    const switcher = document.getElementById('floorSwitcherContainer');
+                    switcher.style.visibility = selectedActiveZoneID === 'zone-b' ? 'hidden' : 'visible';
+
+                    selectedActiveSpotID = null; 
+                    renderGarageMap();
+                });
+            });
+
+            // Level Shift Navigation Clicks
+            const floorButtons = document.querySelectorAll('.floor-btn');
+            const floorPanels = document.querySelectorAll('.floor-panel');
+            floorButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    floorButtons.forEach(btn => btn.classList.remove('active'));
+                    floorPanels.forEach(panel => panel.classList.remove('active'));
+                    
+                    button.classList.add('active');
+                    selectedActiveFloorID = button.getAttribute('data-floor');
+                    document.getElementById(`map-${selectedActiveFloorID}`).classList.add('active');
+                    
+                    selectedActiveSpotID = null;
+                    renderGarageMap();
+                });
+            });
+
+            // Time and Duration Input Controls
+            document.getElementById('globalArrivalTime').addEventListener('input', (e) => {
+                selectedArrivalTime = e.target.value;
+                calculateTimeBoundaries();
+            });
+
+            document.getElementById('globalDuration').addEventListener('change', (e) => {
+                selectedDurationHours = e.target.value;
+                calculateTimeBoundaries();
+            });
+
+            // Delayed binding setup for elements generated inside custom lifecycle frameworks
             setTimeout(() => {
                 const submitBookingBtn = document.getElementById('submitBookingBtn');
                 const bookingDrawer = document.getElementById('bookingDrawer');
@@ -359,12 +375,11 @@
                     });
                 }
 
-                // Listen to rolling horizontal layout calendars clicks seamlessly
                 const dateCards = document.querySelectorAll('.date-card');
                 dateCards.forEach(card => {
                     card.addEventListener('click', () => {
                         selectedBookingDate = card.querySelector('.date-num').textContent;
-                        simulateCapacityEngine(); // Redo calculations for new days chosen
+                        simulateCapacityEngine(); 
                     });
                 });
             }, 300);
