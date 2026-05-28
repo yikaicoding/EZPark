@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZPARK | My Account</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="components.js" defer></script>
+    <style>
+        /* Contextual layout overrides for the account setup profile cards */
+        .account-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            align-items: start;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+        .global-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-family: 'Satoshi', sans-serif;
+            background-color: #F8FAFC;
+            color: var(--brand-slate);
+            font-size: 14px;
+            font-weight: 500;
+            outline: none;
+        }
+        .global-input:focus {
+            border-color: var(--brand-teal-start);
+            background-color: #FFFFFF;
+        }
+        .global-input[disabled] {
+            background-color: #E2E8F0;
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+        .profile-badge-zone {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background-color: #F8FAFC;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+
+<body class="admin-body user-portal-body">
+
+    <ezpark-mobile-header></ezpark-mobile-header>
+
+    <ezpark-sidebar role="student" active="account"></ezpark-sidebar>
+
+    <main class="responsive-main">
+        <header class="hide-on-mobile">
+            <div>
+                <h1>My Account</h1>
+                <p class="section-subtitle">Manage your profile configurations and default vehicle registry</p>
+            </div>
+            <div class="user-profile">
+                <span>Student Driver</span>
+                <div class="avatar"></div>
+            </div>
+        </header>
+
+        <div class="account-grid">
+            
+            <section class="card">
+                <h3 class="panel-title" style="font-size: 18px !important; margin-bottom: 20px;">Profile Settings</h3>
+                
+                <form id="profileForm" onsubmit="saveProfile(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="detail-label">First Name</label>
+                            <input type="text" class="global-input" value="Yi Kai" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="detail-label">Last Name</label>
+                            <input type="text" class="global-input" value="Ooi" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="detail-label">Student ID (Immutable)</label>
+                        <input type="text" class="global-input" value="STU98321" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="detail-label">Campus Email Address</label>
+                        <input type="email" class="global-input" value="ooiyi@student.edu" required>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </section>
+
+            <div style="display: flex; flex-direction: column; gap: 32px;">
+                
+                <section class="card" style="border-left: 5px solid var(--brand-teal-start);">
+                    <h3 class="panel-title" style="font-size: 18px !important; margin-bottom: 6px;">Vehicle Registry</h3>
+                    <p class="section-subtitle" style="margin-bottom: 20px;">Your active default plate number used for garage bookings</p>
+                    
+                    <form id="vehicleForm" onsubmit="saveVehicle(event)">
+                        <div class="form-group">
+                            <label class="detail-label">Primary Plate Number</label>
+                            <input type="text" class="global-input mono-text" value="PPP-505" style="font-weight: 700; font-size: 18px; letter-spacing: 0.05em;" required>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end;">
+                            <button type="submit" class="btn-primary">Update Plate</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="card">
+                    <h3 class="panel-title" style="font-size: 16px !important; margin-bottom: 16px;">Portal Status</h3>
+                    
+                    <div class="profile-badge-zone">
+                        <div class="status-indicator-dot pulsing" style="width: 12px; height: 12px;"></div>
+                        <div>
+                            <strong style="display: block; font-size: 14px; color: var(--brand-slate);">Account Verified</strong>
+                            <span style="font-size: 12px; color: var(--text-muted);">Standard Student Booking Access Active</span>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                        <span style="color: var(--text-muted); font-weight: 500;">Infraction Logs</span>
+                        <strong class="mono-text" style="color: var(--state-available);">0 Clean Record</strong>
+                    </div>
+                </section>
+
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function saveProfile(e) {
+            e.preventDefault();
+            alert("Profile metadata changes successfully saved locally!");
+        }
+
+        function saveVehicle(e) {
+            e.preventDefault();
+            alert("Default registration plate number updated for all future bookings!");
+        }
+    </script>
+</body>
+</html>
